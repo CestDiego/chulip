@@ -17,7 +17,7 @@ if (env === 'build') {
 }
 
 var config = {
-  entry: './src/index.js',
+  entry: './src/index.jsx',
   devtool: 'source-map',
   output: {
     path: __dirname + '/lib',
@@ -26,6 +26,14 @@ var config = {
   },
   module: {
     loaders: [
+      // {
+      //   test: /\.css/,
+      //   loader: "style!css"
+      // },
+      // {
+      //   test: /\.(otf|eot|svg|ttf|woff|woff2)(\?.+)$/,
+      //   loader: 'url-loader?limit=8192'
+      // },
       {
         test: /(\.jsx|\.js)$/,
         loader: 'babel',
