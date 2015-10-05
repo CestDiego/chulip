@@ -2,25 +2,31 @@ import React from 'react';
 import FontAwesome from 'react-fontawesome';
 /* import jQuery from 'jquery'; */
 import Firebase from 'firebase';
-import firebaseUtils from './firebaseUtils';
-
-var firebaseRef = new Firebase('http://chulip.firebaseio.com/messages');
+import firebaseUtils from './firebaseUtils.js';
 
 import MessageList from './MessageList.jsx';
 import MessageForm from './MessageForm.jsx';
+import TopBar      from './TopBar.jsx'
+
+var messageRef = firebaseUtils.ref.child("messages");
 
 var ChatBox = React.createClass({
   componentWillMount: function () {
-    firebaseRef.on('value', function (snapshot) {
+    messageRef.on('value', function (snapshot) {
       this.setState({
         data: snapshot.val()
       });
     }.bind(this));
   },
   handleMessageSubmit: function (message) {
-    firebaseRef.push().set({
-      authorId: message.authorId,
-      text: message.text
+    messageRef.child(message.stream).push().set(message);
+    // check if current scope has the stream
+  },
+  handleStreamChange: function (newStream) {
+    this.setState({
+      data: {
+        stream: newStream
+      }
     })
   },
   handleLogin: function (e) {
@@ -66,7 +72,7 @@ var ChatBox = React.createClass({
       }
     }
     return {
-      data: {},
+      data: {stream: "default"},
       user: userData
     }
   },
@@ -80,6 +86,7 @@ var ChatBox = React.createClass({
           Chulip Messages
         </h1>
         <FontAwesome className='super-crazy-colors' name="rocket" size="2x" spin />
+        <TopBar data={this.state.data} onStreamChange={this.handleStreamChange}/>
         <MessageList data={this.state.data} user={this.state.user} />
         <MessageForm onMessageSubmit={this.handleMessageSubmit} user={this.state.user} />
 

@@ -22,6 +22,17 @@ firebaseRef.onAuth(function(authData) {
 var firebaseUtils = {
   ref: firebaseRef,
   cachedUser: {},
+  getUserData: function(uid, callback) {
+    firebaseUtils.ref.child("users").child(uid).once('value', function (data) {
+      var author = {
+        username: data.username,
+        name: data.displayName,
+        email: data.email,
+        pic: data.profileImageURL
+      }
+      callback(author)
+    });
+  },
   loginWithGitHub: function (callback) {
     this.ref.authWithOAuthPopup('github', function(error, authData) {
       if (error) {

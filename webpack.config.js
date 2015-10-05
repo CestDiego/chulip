@@ -16,6 +16,8 @@ if (env === 'build') {
   outputFile = appName + '.js';
 }
 
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 var config = {
   entry: './src/index.jsx',
   devtool: 'source-map',
@@ -28,7 +30,7 @@ var config = {
     loaders: [
       // {
       //   test: /\.css/,
-      //   loader: "style!css"
+      //   loader: ExtractTextPlugin.extract("css-loader")
       // },
       // {
       //   test: /\.(otf|eot|svg|ttf|woff|woff2)(\?.+)$/,
