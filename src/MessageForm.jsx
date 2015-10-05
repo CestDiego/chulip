@@ -4,14 +4,15 @@ import firebaseUtils from './firebaseUtils';
 
 var MessageForm = React.createClass({
   handleSubmit: function (e) {
-    e.preventDefault();
     var text = React.findDOMNode(this.refs.text).value.trim();
     var stream = React.findDOMNode(this.refs.stream).value.trim();
+
     if (!text || !stream) {
       return;
     }
-    console.log(this.props)
-    if (firebaseUtils.isLoggedIn()){
+
+    e.preventDefault();
+    if (firebaseUtils.isLoggedIn()) {
       var submitedAt = new Date();
       this.props.onMessageSubmit({
         authorId: this.props.user.id,
@@ -21,29 +22,23 @@ var MessageForm = React.createClass({
       });
     }
     React.findDOMNode(this.refs.text).value = '';
-    React.findDOMNode(this.refs.stream).value = '';
     return;
-  },
-  getInitialState: function () {
-    return null;
   },
   render: function () {
     if (this.props.onRender) {
       this.props.onRender();
     }
     return (
-      <div>
-        <h1>{this.props.user.name}</h1>
-        <form className="commentForm" onSubmit={this.handleSubmit}>
-          <div className="messageInput">
-            <label htmlFor="stream">Stream: </label>
-            <input ref="stream" type="text" value="default"
-              disabled={!firebaseUtils.isLoggedIn()}/>
-            <textarea ref="text" placeholder="Say something nice..."
-              disabled={!firebaseUtils.isLoggedIn()}/>
-          </div>
-          <input type="submit" value="Post"
-            disabled={!firebaseUtils.isLoggedIn()} />
+      <div className="row large-12 columns">
+        <h3>{this.props.user.name}</h3>
+        <form className="commentForm " onSubmit={this.handleSubmit}>
+          <label htmlFor="stream">Stream: </label>
+          <input ref="stream" type="text" defaultValue={this.props.stream}
+            disabled={!firebaseUtils.isLoggedIn()}/>
+          <textarea ref="text" placeholder="Say something nice..."
+            disabled={!firebaseUtils.isLoggedIn()}/>
+          <button className="button success" type="submit"
+            disabled={!firebaseUtils.isLoggedIn()}>Post</button>
         </form>
       </div>
     );

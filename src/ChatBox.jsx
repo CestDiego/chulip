@@ -8,25 +8,34 @@ import MessageList from './MessageList.jsx';
 import MessageForm from './MessageForm.jsx';
 import TopBar      from './TopBar.jsx'
 
-var messageRef = firebaseUtils.ref.child("messages");
+var messagesRef = firebaseUtils.ref.child("messages");
 
 var ChatBox = React.createClass({
   componentWillMount: function () {
-    messageRef.on('value', function (snapshot) {
+    messagesRef.on('value', function (globalMessages) {
+      var messages = globalMessages.val()
       this.setState({
-        data: snapshot.val()
+        streamList:  Object.keys(messages),
+      });
+    }.bind(this));
+
+    var stream = this.state.stream;
+    var streamRef = messagesRef.child(stream);
+
+    streamRef.on('value', function (messagesRef) {
+      var messages = messagesRef.val()
+      this.setState({
+        messages: messages
       });
     }.bind(this));
   },
   handleMessageSubmit: function (message) {
-    messageRef.child(message.stream).push().set(message);
+    messagesRef.child(message.stream).push().set(message);
     // check if current scope has the stream
   },
   handleStreamChange: function (newStream) {
     this.setState({
-      data: {
-        stream: newStream
-      }
+      stream: newStream
     })
   },
   handleLogin: function (e) {
@@ -72,7 +81,9 @@ var ChatBox = React.createClass({
       }
     }
     return {
-      data: {stream: "default"},
+      stream: "default",
+      streamList: ["default"],
+      messages: {},
       user: userData
     }
   },
@@ -86,9 +97,12 @@ var ChatBox = React.createClass({
           Chulip Messages
         </h1>
         <FontAwesome className='super-crazy-colors' name="rocket" size="2x" spin />
-        <TopBar data={this.state.data} onStreamChange={this.handleStreamChange}/>
-        <MessageList data={this.state.data} user={this.state.user} />
-        <MessageForm onMessageSubmit={this.handleMessageSubmit} user={this.state.user} />
+        <TopBar stream={this.state.stream} streamList={this.state.streamList}
+          onStreamChange={this.handleStreamChange}/>
+        <MessageList stream={this.state.stream}
+          messages={this.state.messages} user={this.state.user} />
+        <MessageForm stream={this.state.stream}
+          onMessageSubmit={this.handleMessageSubmit} user={this.state.user} />
 
         <button onClick={this.handleLogin}>Click MAH</button>
       </div>

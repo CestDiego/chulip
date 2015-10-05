@@ -10,11 +10,13 @@ var Message = React.createClass({
   },
   componentWillMount: function () {
     var authorId = this.props.authorId;
+
     firebaseUtils.ref.child("users").child(authorId).on('value', function (data) {
-      var author = data.val()
+      var author = data.val();
+
       this.setState({
         author: author
-      })
+      });
     }.bind(this));
   },
   getInitialState: function () {
@@ -25,14 +27,16 @@ var Message = React.createClass({
         email: "gyuest@goma.com",
         pic: "http://i.imgur.com/d8skZVO.webm"
       }
-    }
+    };
   },
   render: function () {
     return (
-      <div className='message'>
-        <h2 className='messageAuthor'> {this.state.author.name} </h2>
-        <img src={this.state.author.pic}  style={{height: '40px', width: '40px'}} />
-        <span dangerouslySetInnerHTML={this.rawMarkup()} />
+      <div className='message row'>
+        <div className="small-2 columns">
+          <img src={this.state.author.pic} style={{height: '40px', width: '40px'}} />
+        </div>
+        <span className="small-10 columns" dangerouslySetInnerHTML={this.rawMarkup()} />
+        <hr/>
       </div>
     );
   },
