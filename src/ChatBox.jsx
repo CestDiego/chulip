@@ -34,9 +34,15 @@ var ChatBox = React.createClass({
     // check if current scope has the stream
   },
   handleStreamChange: function (newStream) {
-    this.setState({
-      stream: newStream
-    })
+    var streamRef = messagesRef.child(newStream);
+
+    streamRef.on('value', function (messagesRef) {
+      var messages = messagesRef.val()
+      this.setState({
+        stream: newStream,
+        messages: messages
+      });
+    }.bind(this));
   },
   handleLogin: function (e) {
     if (!firebaseUtils.isLoggedIn()) {
