@@ -16,15 +16,17 @@ var TopBar = React.createClass({
   },
   render: function () {
     var options = this.props.streamList.map(function (stream) {
+
+      var isSelected = (stream === this.props.stream) ? true : false;
       return (
-        <option value={stream}>{stream}</option>
+        <option selected={isSelected}  value={stream} >{stream}</option>
       );
-    });
+    }.bind(this));
 
     return (
-      <div className='row topBar'>
-        <h2 className='large-3 columns'> #{this.props.stream} </h2>
-        <select className="large-9 columns" ref="streamSelect" onChange={this.handleStreamChange}>
+      <div className='row large-12 topBar columns'>
+        <h2 className='large-2 columns'> #{this.props.stream} </h2>
+        <select className="large-10 columns" ref="streamSelect" onChange={this.handleStreamChange}>
           {options}
         </select>
         <hr/>

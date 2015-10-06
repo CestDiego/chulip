@@ -35,6 +35,9 @@ var MessageForm = React.createClass({
           <label htmlFor="stream">Stream: </label>
           <input ref="stream" type="text" defaultValue={this.props.stream}
             disabled={!firebaseUtils.isLoggedIn()}/>
+          <label htmlFor="topic">Topic: </label>
+          <input ref="topic" type="text" defaultValue={this.props.topic}
+            disabled={!firebaseUtils.isLoggedIn()}/>
           <textarea ref="text" placeholder="Say something nice..."
             disabled={!firebaseUtils.isLoggedIn()}/>
           <button className="button success" type="submit"

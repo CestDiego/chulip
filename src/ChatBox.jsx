@@ -7,6 +7,7 @@ import firebaseUtils from './firebaseUtils.js';
 import MessageList from './MessageList.jsx';
 import MessageForm from './MessageForm.jsx';
 import TopBar      from './TopBar.jsx'
+import SidePanel   from './SidePanel.jsx'
 
 var messagesRef = firebaseUtils.ref.child("messages");
 
@@ -15,7 +16,7 @@ var ChatBox = React.createClass({
     messagesRef.on('value', function (globalMessages) {
       var messages = globalMessages.val()
       this.setState({
-        streamList:  Object.keys(messages),
+        streamList:  Object.keys(messages)
       });
     }.bind(this));
 
@@ -68,17 +69,17 @@ var ChatBox = React.createClass({
   },
   getInitialState: function () {
     var authData = firebaseUtils.ref.getAuth();
+    var userData = {};
     if (authData) {
-      var userData =
-      {
+      userData = {
         id:       authData.uid,
         username: authData.github.username,
         name:     authData.github.displayName,
         email:    authData.github.email,
-        pic:      authData.github.profileImageURL,
+        pic:      authData.github.profileImageURL
       }
     } else {
-      var userData = {
+      userData = {
         id:       "-1",
         username: "guest",
         name:     "Guest",
@@ -88,34 +89,32 @@ var ChatBox = React.createClass({
     }
     return {
       stream: "default",
+      topic: "",
       streamList: ["default"],
       messages: {},
       user: userData
     }
   },
   render: function () {
-    if (this.props.onRender) {
-      this.props.onRender();
-    }
     return (
       <div className='messageBox' >
-        <h1>
-          Chulip Messages
-        </h1>
-        <FontAwesome className='super-crazy-colors' name="rocket" size="2x" spin />
+        <h1> Chulip Messages </h1>
+
+        <button className="button tiny" onClick={this.handleLogin}>Click MAH</button>
+
         <TopBar stream={this.state.stream} streamList={this.state.streamList}
           onStreamChange={this.handleStreamChange}/>
-        <MessageList stream={this.state.stream}
-          messages={this.state.messages} user={this.state.user} />
-        <MessageForm stream={this.state.stream}
-          onMessageSubmit={this.handleMessageSubmit} user={this.state.user} />
-
-        <button onClick={this.handleLogin}>Click MAH</button>
+        <div className="large-6 columns">
+          <MessageList stream={this.state.stream}
+            messages={this.state.messages} user={this.state.user} />
+          <MessageForm stream={this.state.stream} topic={this.state.topic}
+            onMessageSubmit={this.handleMessageSubmit} user={this.state.user} />
+        </div>
+        <div className="large-6 show-for-medium-up columns">
+          <SidePanel />
+        </div>
       </div>
     );
-  },
-  propTypes: {
-    onRender: React.PropTypes.func
   }
 });
 
