@@ -13,7 +13,7 @@ var messagesRef = firebaseUtils.ref.child("messages");
 
 var ChatBox = React.createClass({
   componentWillMount: function () {
-    messagesRef.on('value', function (globalMessages) {
+    messagesRef.once('value', function (globalMessages) {
       var messages = globalMessages.val()
       this.setState({
         streamList:  Object.keys(messages)
@@ -37,10 +37,14 @@ var ChatBox = React.createClass({
   handleStreamChange: function (newStream) {
     var streamRef = messagesRef.child(newStream);
 
-    streamRef.on('value', function (messagesRef) {
+    this.setState({
+      stream: newStream
+    });
+
+    // update me
+    streamRef.once('value', function (messagesRef) {
       var messages = messagesRef.val()
       this.setState({
-        stream: newStream,
         messages: messages
       });
     }.bind(this));
@@ -104,14 +108,16 @@ var ChatBox = React.createClass({
 
         <TopBar stream={this.state.stream} streamList={this.state.streamList}
           onStreamChange={this.handleStreamChange}/>
-        <div className="large-6 columns">
-          <MessageList stream={this.state.stream}
-            messages={this.state.messages} user={this.state.user} />
-          <MessageForm stream={this.state.stream} topic={this.state.topic}
-            onMessageSubmit={this.handleMessageSubmit} user={this.state.user} />
-        </div>
-        <div className="large-6 show-for-medium-up columns">
-          <SidePanel />
+        <div className="row">
+          <div className="medium-12 large-6 columns">
+            <MessageList stream={this.state.stream}
+              messages={this.state.messages} user={this.state.user} />
+            <MessageForm stream={this.state.stream} topic={this.state.topic}
+              onMessageSubmit={this.handleMessageSubmit} user={this.state.user} />
+          </div>
+          <div className="large-6 columns show-for-medium-up ">
+            <SidePanel />
+          </div>
         </div>
       </div>
     );

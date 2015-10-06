@@ -41,17 +41,19 @@ var MessageList = React.createClass({
       }
       prevMessage = message
     });
+    console.log("le Message Array");
     console.log(messageArray)
     var messageNodes = messageArray.map(function (messageList) {
       return (
-        <MessagesBox authorId={messageList.authorId} messages={messageList.messages}>
-          {messageList.messages[0].text}
+        <MessagesBox className="large-6 columns" authorId={messageList.authorId} messages={messageList.messages}>
         </MessagesBox>
       );
     })
     return (
-      <div className='messageList'>
-        {messageNodes}
+      <div className='messageList row'>
+        <div className="large-12 columns">
+          {messageNodes}
+        </div>
       </div>
     );
   }

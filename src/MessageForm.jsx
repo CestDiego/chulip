@@ -25,29 +25,21 @@ var MessageForm = React.createClass({
     return;
   },
   render: function () {
-    if (this.props.onRender) {
-      this.props.onRender();
-    }
     return (
-      <div className="row large-12 columns">
+      <form className="commentForm " onSubmit={this.handleSubmit}>
         <h3>{this.props.user.name}</h3>
-        <form className="commentForm " onSubmit={this.handleSubmit}>
-          <label htmlFor="stream">Stream: </label>
-          <input ref="stream" type="text" defaultValue={this.props.stream}
-            disabled={!firebaseUtils.isLoggedIn()}/>
-          <label htmlFor="topic">Topic: </label>
-          <input ref="topic" type="text" defaultValue={this.props.topic}
-            disabled={!firebaseUtils.isLoggedIn()}/>
-          <textarea ref="text" placeholder="Say something nice..."
-            disabled={!firebaseUtils.isLoggedIn()}/>
-          <button className="button success" type="submit"
-            disabled={!firebaseUtils.isLoggedIn()}>Post</button>
-        </form>
-      </div>
+        <label htmlFor="stream">Stream: </label>
+        <input ref="stream" type="text" defaultValue={this.props.stream}
+          disabled={!firebaseUtils.isLoggedIn()}/>
+        <label htmlFor="topic">Topic: </label>
+        <input ref="topic" type="text" defaultValue={this.props.topic}
+          disabled={!firebaseUtils.isLoggedIn()}/>
+        <textarea ref="text" placeholder="Say something nice..."
+          disabled={!firebaseUtils.isLoggedIn()}/>
+        <button className="button success" type="submit"
+          disabled={!firebaseUtils.isLoggedIn()}>Post</button>
+      </form>
     );
-  },
-  propTypes: {
-    onRender: React.PropTypes.func
   }
 });
 
