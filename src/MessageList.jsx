@@ -2,6 +2,8 @@ import React from 'react';
 import MessagesBox from './MessagesBox.jsx';
 import firebaseUtils from './firebaseUtils.js';
 
+import mori from 'mori';
+
 var MessageList = React.createClass({
   render: function () {
     // Firebase gives Objects instead of arrays
@@ -10,42 +12,19 @@ var MessageList = React.createClass({
     var messageArray = [];
     var currentIndex = 0;
     var prevMessage;
-    Object.keys(Messages).forEach(function (messageKey, keyIndex, array) {
-      var message = Messages[messageKey]
-      var authorId =  message.authorId;
-      var lastIndex = messageArray.length != 0 ? messageArray.length -1 : 0;
-      if (prevMessage == undefined) {
-        messageArray.push({
-          authorId: authorId,
-          messages: [message]
-        })
-      } else {
-        if (prevMessage.authorId == message.authorId) {
-          if (messageArray[lastIndex] == undefined) {
-            messageArray[lastIndex] = {
-              authorId: authorId,
-              messages: [message]
-            }
-          } else {
-            messageArray[lastIndex].messages.push(message);
-          }
-        } else {
-          // Case Zero where nothing is define
-          console.log(" no arraty" + messageArray);
-          messageArray.push({
-            authorId: authorId,
-            messages: [message]
-          });
-          currentIndex = currentIndex + 1;
-        }
-      }
-      prevMessage = message
+
+    var messages = Object.keys(Messages).map(function(messageKey){
+      return Messages[messageKey]
     });
-    console.log("le Message Array");
-    console.log(messageArray)
+    var messageArray = mori.toJs(mori.partitionBy(
+      (message) => {
+        return message.authorId;
+      } , messages));
+    console.log(messageArray);
+
     var messageNodes = messageArray.map(function (messageList) {
       return (
-        <MessagesBox className="large-6 columns" authorId={messageList.authorId} messages={messageList.messages}>
+        <MessagesBox className="large-6 columns" messages={messageList}>
         </MessagesBox>
       );
     })

@@ -5,7 +5,7 @@ import Message from './Message.jsx';
 
 var MessagesBox = React.createClass({
   componentWillMount: function () {
-    var authorId = this.props.authorId;
+    var authorId = this.props.messages[0].authorId;
 
     firebaseUtils.ref.child("users").child(authorId).on('value', function (data) {
       var author = data.val();
