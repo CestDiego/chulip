@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "css-loader": "^0.19.0",
+    "date-format": "0.0.2",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
     "firebase": "^2.3.1",

@@ -115,9 +115,6 @@ var ChatBox = React.createClass({
             <MessageForm stream={this.state.stream} topic={this.state.topic}
               onMessageSubmit={this.handleMessageSubmit} user={this.state.user} />
           </div>
-          <div className="large-6 columns show-for-medium-up ">
-            <SidePanel />
-          </div>
         </div>
       </div>
     );

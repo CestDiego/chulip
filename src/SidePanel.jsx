@@ -3,7 +3,9 @@ import React from 'react';
 var SidePanel = React.createClass({
   render: function () {
     return (
-      <div>Holi</div>
+      <div className="row">
+        Holi
+      </div>
     );
   }
 });
