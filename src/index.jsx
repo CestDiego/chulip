@@ -1,23 +1,17 @@
 import React from 'react';
-import { Router, Route, Link } from 'react-router';
-import ChatBox from './ChatBox.jsx';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
+import ChatBox from './components/ChatBox.jsx';
 /* import firebaseUtils from './firebaseUtils.js'; */
 
-const App = React.createClass({
-  render: function () {
-    return (
-      <ChatBox url='http://localhost:3000/api/comments' />
-    )
-  }
-})
+let store =  createStore(ChatBox);
 
 window.onload = () => {
+  let rootElement = document.querySelector('#container');
+
   React.render(
-    <Router>
-      <Route path="/" component={App}></Route>
-      {/* <Route path="/login" component={Login}></Route> */}
-    </Router>
-    ,
-    document.querySelector('#container')
-  );
+    <Provider store={store}>
+      {() => <ChatBox/>}
+    </Provider>, rootElement);
 };

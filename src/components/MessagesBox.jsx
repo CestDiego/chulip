@@ -1,22 +1,25 @@
-import React from 'react';
-import marked from 'marked';
-import firebaseUtils from './firebaseUtils';
+import React, { Component } from 'react';
+
+import firebaseUtils from './firebaseUtils.js';
 import Message from './Message.jsx';
 
-var MessagesBox = React.createClass({
-  componentWillMount: function () {
+export default class MessagesBox extends Component {
+  componentWillMount() {
     var authorId = this.props.messages[0].authorId;
 
-    firebaseUtils.ref.child("users").child(authorId).on('value', function (data) {
-      var author = data.val();
+    firebaseUtils.ref.child("users").child(authorId).on('value',
+      data => {
+        var author = data.val();
+        this.setState({
+          author: author
+        });
+      }
+    );
+  }
 
-      this.setState({
-        author: author
-      });
-    }.bind(this));
-  },
-  getInitialState: function () {
-    return {
+  constructor(props) {
+    super(props);
+    this.state =  {
       author: {
         username: "guest",
         name: "Guest",
@@ -24,15 +27,17 @@ var MessagesBox = React.createClass({
         pic: "http://i.imgur.com/d8skZVO.webm"
       }
     };
-  },
-  render: function () {
+  }
+
+  render() {
     var messages = this.props.messages.map(function (message) {
       return (
         <Message message={message}>
           {message.text}
         </Message>
       )
-    })
+    });
+
     return (
       <div className='message row'>
         <div className="small-2 columns">
@@ -44,11 +49,5 @@ var MessagesBox = React.createClass({
         <hr/>
       </div>
     );
-  },
-  propTypes: {
-    onRender: React.PropTypes.func,
-    authorId: React.PropTypes.string
   }
-});
-
-export default MessagesBox;
+}

@@ -54,7 +54,9 @@ var config = {
 if (env === 'dev') {
   new WebpackDevServer(webpack(config), {
     contentBase: './example',
+    proxy: {'/zulip': 'http://localhost:9910'},
     hot: true,
+    stats: {colors: true},
     debug: true
   }).listen(port, host, function (err, result) {
     if (err) {

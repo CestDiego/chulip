@@ -1,17 +1,12 @@
-import React from 'react';
-import MessagesBox from './MessagesBox.jsx';
-import firebaseUtils from './firebaseUtils.js';
-
+import React, { Component } from 'react';
 import mori from 'mori';
 
-var MessageList = React.createClass({
-  render: function () {
+import MessagesBox from './MessagesBox.jsx';
+
+export default class MessageList extends Component{
+  render() {
     // Firebase gives Objects instead of arrays
     var Messages = this.props.messages;
-
-    var messageArray = [];
-    var currentIndex = 0;
-    var prevMessage;
 
     var messages = Object.keys(Messages).map(function(messageKey){
       return Messages[messageKey]
@@ -27,7 +22,7 @@ var MessageList = React.createClass({
         <MessagesBox className="large-6 columns" messages={messageList}>
         </MessagesBox>
       );
-    })
+    });
     return (
       <div className='messageList row'>
         <div className="large-12 columns">
@@ -36,6 +31,4 @@ var MessageList = React.createClass({
       </div>
     );
   }
-});
-
-export default MessageList;
+}

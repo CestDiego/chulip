@@ -1,40 +1,42 @@
-import React from 'react';
-import FontAwesome from 'react-fontawesome';
-/* import jQuery from 'jquery'; */
-import Firebase from 'firebase';
-import firebaseUtils from './firebaseUtils.js';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
+import firebaseUtils from './firebaseUtils.js';
 import MessageList from './MessageList.jsx';
 import MessageForm from './MessageForm.jsx';
-import TopBar      from './TopBar.jsx'
-import SidePanel   from './SidePanel.jsx'
+import TopBar      from './TopBar.jsx';
+import SidePanel   from './SidePanel.jsx';
 
 var messagesRef = firebaseUtils.ref.child("messages");
 
-var ChatBox = React.createClass({
-  componentWillMount: function () {
-    messagesRef.once('value', function (globalMessages) {
-      var messages = globalMessages.val()
-      this.setState({
-        streamList:  Object.keys(messages)
-      });
-    }.bind(this));
-
+class ChatBox extends Component {
+  componentWillMount() {
     var stream = this.state.stream;
     var streamRef = messagesRef.child(stream);
 
+    messagesRef.once('value', function (globalMessages) {
+      var messages = globalMessages.val();
+
+      this.setState({
+        streamList: Object.keys(messages)
+      });
+    }.bind(this));
+
     streamRef.on('value', function (messagesRef) {
-      var messages = messagesRef.val()
+      var messages = messagesRef.val();
+
       this.setState({
         messages: messages
       });
     }.bind(this));
-  },
-  handleMessageSubmit: function (message) {
+  }
+
+  handleMessageSubmit(message) {
     messagesRef.child(message.stream).push().set(message);
     // check if current scope has the stream
-  },
-  handleStreamChange: function (newStream) {
+  }
+
+  handleStreamChange(newStream) {
     var streamRef = messagesRef.child(newStream);
 
     this.setState({
@@ -43,37 +45,44 @@ var ChatBox = React.createClass({
 
     // update me
     streamRef.once('value', function (messagesRef) {
-      var messages = messagesRef.val()
+      var messages = messagesRef.val();
+
       this.setState({
         messages: messages
       });
     }.bind(this));
-  },
-  handleLogin: function (e) {
+  }
+
+  handleLogin(e) {
+    var defaultUserData = {
+      id: '-1',
+      username: "guest",
+      name: "Guest",
+      email: "exa@mple.com",
+      pic: "http://i.imgur.com/d8skZVO.webm"
+    };
+
     if (!firebaseUtils.isLoggedIn()) {
       firebaseUtils.loginWithGitHub(function (userData) {
         this.setState({
           user: userData
-        })
+        });
       }.bind(this));
     } else {
       // Doesn't update the state
       firebaseUtils.logout();
-      var userData = {
-        id: '-1',
-        username: "guest",
-        name: "Guest",
-        email: "exa@mple.com",
-        pic: "http://i.imgur.com/d8skZVO.webm"
-      }
       this.setState({
-        user: userData
-      })
-    }
-  },
-  getInitialState: function () {
+        user: defaultUserData
+      });
+    };
+  }
+
+  constructor(props) {
     var authData = firebaseUtils.ref.getAuth();
     var userData = {};
+
+    super(props);
+
     if (authData) {
       userData = {
         id:       authData.uid,
@@ -81,7 +90,7 @@ var ChatBox = React.createClass({
         name:     authData.github.displayName,
         email:    authData.github.email,
         pic:      authData.github.profileImageURL
-      }
+      };
     } else {
       userData = {
         id:       "-1",
@@ -89,17 +98,19 @@ var ChatBox = React.createClass({
         name:     "Guest",
         email:    "guest@host.com",
         pic:      "http://i.imgur.com/d8skZVO.webm"
-      }
-    }
-    return {
+      };
+    };
+
+    this.state =  {
       stream: "default",
       topic: "",
       streamList: ["default"],
       messages: {},
       user: userData
-    }
-  },
-  render: function () {
+    };
+  }
+  render() {
+    const { dispatch } = this.props;
     return (
       <div className='messageBox' >
         <h1> Chulip Messages </h1>
@@ -122,6 +133,6 @@ var ChatBox = React.createClass({
       </div>
     );
   }
-});
+}
 
-export default ChatBox;
+export default App

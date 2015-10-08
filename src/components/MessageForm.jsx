@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import firebaseUtils from './firebaseUtils';
 
-var MessageForm = React.createClass({
-  handleSubmit: function (e) {
+export default class MessageForm extends Component {
+  handleSubmit(e) {
     var text = React.findDOMNode(this.refs.text).value.trim();
     var stream = React.findDOMNode(this.refs.stream).value.trim();
+    var submitedAt = new Date();
 
     if (!text || !stream) {
       return;
@@ -13,7 +14,6 @@ var MessageForm = React.createClass({
 
     e.preventDefault();
     if (firebaseUtils.isLoggedIn()) {
-      var submitedAt = new Date();
       this.props.onMessageSubmit({
         authorId: this.props.user.id,
         text: text,
@@ -23,8 +23,9 @@ var MessageForm = React.createClass({
     }
     React.findDOMNode(this.refs.text).value = '';
     return;
-  },
-  render: function () {
+  }
+
+  render() {
     return (
       <form className="commentForm " onSubmit={this.handleSubmit}>
         <h3>{this.props.user.name}</h3>
@@ -41,6 +42,4 @@ var MessageForm = React.createClass({
       </form>
     );
   }
-});
-
-export default MessageForm;
+}
