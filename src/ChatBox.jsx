@@ -109,7 +109,7 @@ var ChatBox = React.createClass({
         <TopBar stream={this.state.stream} streamList={this.state.streamList}
           onStreamChange={this.handleStreamChange}/>
         <div className="row">
-          <div className="medium-12 large-6 columns">
+          <div className="medium-12 columns">
             <MessageList stream={this.state.stream}
               messages={this.state.messages} user={this.state.user} />
             <MessageForm stream={this.state.stream} topic={this.state.topic}
